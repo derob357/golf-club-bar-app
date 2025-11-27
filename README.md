@@ -85,32 +85,74 @@ golf-club-bar-app/
 
 ### Prerequisites
 
-- Node.js >= 16
-- React Native development environment
-- Firebase account
-- Xcode (for iOS) or Android Studio (for Android)
+Before running the project on your Mac, you need:
 
-### Installation
+- **Node.js v18+** - JavaScript runtime ([Download](https://nodejs.org/))
+- **Watchman** - File watcher (`brew install watchman`)
+- **Xcode** - For iOS development (from Mac App Store)
+- **CocoaPods** - iOS dependency manager (`sudo gem install cocoapods`)
+- **Android Studio** - For Android development (optional)
+- **Firebase account** - Backend services ([console.firebase.google.com](https://console.firebase.google.com))
+
+### Installation (macOS)
+
+#### Step 1: Clone and Install Dependencies
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/golf-club-bar-app.git
+git clone https://github.com/derob357/golf-club-bar-app.git
 cd golf-club-bar-app
 
-# Install dependencies
+# Install JavaScript dependencies
 npm install
+```
 
-# iOS: Install pods
-cd ios && pod install && cd ..
+#### Step 2: Install iOS Dependencies
 
-# Run on iOS
+```bash
+# Navigate to iOS folder and install CocoaPods dependencies
+cd ios
+pod install
+cd ..
+```
+
+**What this does:** Downloads and links all iOS native libraries (Firebase, navigation components, etc.)
+
+**Troubleshooting:** If `pod install` fails, make sure CocoaPods is installed:
+```bash
+sudo gem install cocoapods
+```
+
+#### Step 3: Run the App
+
+```bash
+# Run on iOS Simulator (Mac only)
 npm run ios
 
-# Run on Android
+# Run on specific iPhone model
+npm run ios -- --simulator="iPhone 15 Pro"
+
+# Run on Android Emulator
 npm run android
 ```
 
-For detailed installation instructions, see [INSTALLATION.md](docs/INSTALLATION.md).
+**First build takes 3-5 minutes.** Subsequent builds are faster.
+
+### What Happens When You Run
+
+1. **Metro Bundler starts** - JavaScript packager (port 8081)
+2. **App builds** - Native code compiles
+3. **Simulator launches** - iOS Simulator opens
+4. **App installs and runs** - You'll see the login screen
+
+### 📖 Detailed Setup Guide
+
+**New to React Native?** See our complete setup guide:
+- **[Local Setup Guide](docs/LOCAL_SETUP_GUIDE.md)** - Step-by-step Mac setup with troubleshooting
+
+**Quick references:**
+- [Installation Guide](docs/INSTALLATION.md) - Full installation with troubleshooting
+- [Firebase Setup](docs/FIREBASE_SETUP.md) - Configure backend (required for login)
 
 ## 🔥 Firebase Configuration
 
