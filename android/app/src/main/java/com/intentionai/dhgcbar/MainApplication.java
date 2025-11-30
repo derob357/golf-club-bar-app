@@ -1,4 +1,4 @@
-package com.dhgc;
+package com.intentionai.dhgcbar;
 
 import android.app.Application;
 import androidx.multidex.MultiDexApplication;

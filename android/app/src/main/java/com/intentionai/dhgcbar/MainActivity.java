@@ -1,4 +1,4 @@
-package com.dhgc;
+package com.intentionai.dhgcbar;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

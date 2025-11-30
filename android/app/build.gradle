@@ -74,14 +74,14 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.dhgc"
+    namespace "com.intentionai.dhgcbar"
     
     buildFeatures {
         buildConfig true
     }
     
     defaultConfig {
-        applicationId "com.dhgc"
+        applicationId "com.intentionai.dhgcbar"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
