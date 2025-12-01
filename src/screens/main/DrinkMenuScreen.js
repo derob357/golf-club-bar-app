@@ -162,7 +162,7 @@ const DrinkMenuScreen = ({navigation}) => {
       selected={selectedCategory === category.id}
       onPress={() => setSelectedCategory(category.id)}
       style={styles.chip}
-      icon={category.icon}>
+      {...(category.icon && { icon: category.icon })}>
       {category.name}
     </Chip>
   );

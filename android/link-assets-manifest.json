@@ -1,0 +1,29 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/CormorantInfant-Bold.ttf",
+      "sha1": "a26cb91c0e9496e3878d9d38dd0b51268d712077"
+    },
+    {
+      "path": "assets/fonts/CormorantInfant-Regular.ttf",
+      "sha1": "2eb7207ac164c3d8f27cd12dd0c9d927aaff6369"
+    },
+    {
+      "path": "assets/fonts/CrimsonText-Bold.ttf",
+      "sha1": "a7d34462bdf8b40fd3f6ba0822ce4bb09b3f9698"
+    },
+    {
+      "path": "assets/fonts/CrimsonText-Regular.ttf",
+      "sha1": "64c3d3ce79fc29150b97c9b8462aec907a5b22e4"
+    },
+    {
+      "path": "assets/fonts/CrimsonText-SemiBold.ttf",
+      "sha1": "97b42154619b196d2dec1222402f97a613eedbc4"
+    },
+    {
+      "path": "assets/fonts/crimson-text.zip",
+      "sha1": "a40ef60cf90afab52b6d28bb201b9fbb4498e58c"
+    }
+  ]
+}

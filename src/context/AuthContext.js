@@ -21,7 +21,7 @@ export const AuthProvider = ({children}) => {
     // Listen for authentication state changes
     const unsubscribe = AuthService.onAuthStateChanged(async authUser => {
       setLoading(true);
-      if (authUser && authUser.uid) {
+      if (authUser && authUser.uid && typeof authUser.uid === 'string' && authUser.uid.trim()) {
         try {
           const data = await AuthService.getUserData(authUser.uid);
           if (data && typeof data === 'object') {
@@ -58,10 +58,14 @@ export const AuthProvider = ({children}) => {
       setError(null);
       setLoading(true);
       const authUser = await AuthService.signIn(email, password);
-      const data = await AuthService.getUserData(authUser.uid);
-      setUser(authUser);
-      setUserData(data);
-      return authUser;
+      if (authUser && authUser.uid && typeof authUser.uid === 'string' && authUser.uid.trim()) {
+        const data = await AuthService.getUserData(authUser.uid);
+        setUser(authUser);
+        setUserData(data);
+        return authUser;
+      } else {
+        throw new Error('Invalid user authentication data');
+      }
     } catch (err) {
       setError(err.message);
       throw err;
@@ -75,10 +79,14 @@ export const AuthProvider = ({children}) => {
       setError(null);
       setLoading(true);
       const authUser = await AuthService.signUp(email, password, additionalData);
-      const data = await AuthService.getUserData(authUser.uid);
-      setUser(authUser);
-      setUserData(data);
-      return authUser;
+      if (authUser && authUser.uid && typeof authUser.uid === 'string' && authUser.uid.trim()) {
+        const data = await AuthService.getUserData(authUser.uid);
+        setUser(authUser);
+        setUserData(data);
+        return authUser;
+      } else {
+        throw new Error('Invalid user authentication data');
+      }
     } catch (err) {
       setError(err.message);
       throw err;

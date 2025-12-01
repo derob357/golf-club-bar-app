@@ -40,7 +40,7 @@ const CheckoutScreen = ({navigation}) => {
       if (!currentMember || !currentMember.memberId) {
         throw new Error('Member information is missing');
       }
-      if (!userData || !userData.uid) {
+      if (!userData || (!userData.uid && !userData.id)) {
         throw new Error('Bartender information is missing');
       }
       if (!Array.isArray(cartItems) || cartItems.length === 0) {
@@ -49,6 +49,7 @@ const CheckoutScreen = ({navigation}) => {
 
       const memberName = `${currentMember.firstName || ''} ${currentMember.lastName || ''}`.trim() || 'Unknown';
       const bartenderName = userData.name || 'Unknown';
+      const bartenderId = userData.uid || userData.id;
 
       // Validate and sanitize cart items
       const validatedItems = cartItems.map(item => {
@@ -68,7 +69,7 @@ const CheckoutScreen = ({navigation}) => {
       const orderData = {
         memberId: currentMember.memberId,
         memberName: memberName,
-        bartenderId: userData.uid,
+        bartenderId: bartenderId,
         bartenderName: bartenderName,
         items: validatedItems,
         subtotal: getCartTotal(),

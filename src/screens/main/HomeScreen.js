@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {View, StyleSheet, ScrollView, Image} from 'react-native';
 import {
   Card,
   Title,
@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useAuth} from '../../context/AuthContext';
 import {useCart} from '../../context/CartContext';
+import {headingFont, headingFontRegular} from '../../theme/theme';
 
 const HomeScreen = ({navigation}) => {
   const {userData} = useAuth();
@@ -20,14 +21,14 @@ const HomeScreen = ({navigation}) => {
     {
       title: 'New Order',
       icon: 'plus-circle',
-      color: '#1B5E20',
+      color: '#2C5F2D',
       description: 'Start a new drink order',
       action: () => navigation.navigate('Orders', {screen: 'MemberLookup'}),
     },
     {
       title: 'Current Cart',
       icon: 'cart',
-      color: '#F57C00',
+      color: '#D4AF37',
       description: `${getCartItemCount()} items in cart`,
       action: () => navigation.navigate('Orders', {screen: 'Cart'}),
     },
@@ -37,7 +38,7 @@ const HomeScreen = ({navigation}) => {
     menuItems.push({
       title: 'Reports',
       icon: 'chart-bar',
-      color: '#1976D2',
+      color: '#2C5F2D',
       description: 'View sales reports',
       action: () => navigation.navigate('Reports'),
     });
@@ -45,12 +46,23 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Surface style={styles.header}>
-        <Title style={styles.headerTitle}>Welcome, {userData?.name}!</Title>
-        <Paragraph style={styles.headerSubtitle}>
-          {userData?.role === 'manager' ? 'Manager' : 'Bartender'}
-        </Paragraph>
-      </Surface>
+      <View style={styles.bannerContainer}>
+        <Image
+          source={require('../../../dhgc-banner.jpg')}
+          style={styles.bannerImage}
+          resizeMode="cover"
+        />
+        <View style={styles.bannerOverlay}>
+          <Text style={styles.welcomeToText}>Welcome To</Text>
+          <Text style={styles.clubName}>Druid Hills Golf Club</Text>
+          <View style={styles.welcomeBox}>
+            <Text style={styles.welcomeText}>Welcome, {userData?.name}</Text>
+            <Text style={styles.roleText}>
+              {userData?.role === 'manager' ? 'Manager' : 'Bartender'}
+            </Text>
+          </View>
+        </View>
+      </View>
 
       <View style={styles.content}>
         <Text style={styles.sectionTitle}>Quick Actions</Text>
@@ -76,19 +88,19 @@ const HomeScreen = ({navigation}) => {
           <Card.Content>
             <Title style={styles.infoTitle}>Quick Tips</Title>
             <View style={styles.tipRow}>
-              <Icon name="information" size={20} color="#1976D2" />
+              <Icon name="information" size={20} color="#2C5F2D" />
               <Text style={styles.tipText}>
                 Member IDs are always 4 digits
               </Text>
             </View>
             <View style={styles.tipRow}>
-              <Icon name="information" size={20} color="#1976D2" />
+              <Icon name="information" size={20} color="#2C5F2D" />
               <Text style={styles.tipText}>
                 You can add custom drinks to any order
               </Text>
             </View>
             <View style={styles.tipRow}>
-              <Icon name="information" size={20} color="#1976D2" />
+              <Icon name="information" size={20} color="#2C5F2D" />
               <Text style={styles.tipText}>
                 Orders are automatically saved to member accounts
               </Text>
@@ -103,28 +115,74 @@ const HomeScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F8F9F5',
   },
-  header: {
-    padding: 24,
-    backgroundColor: '#1B5E20',
-    elevation: 4,
+  bannerContainer: {
+    height: 240,
+    position: 'relative',
   },
-  headerTitle: {
-    fontSize: 28,
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+  },
+  bannerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(44, 95, 45, 0.75)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  welcomeToText: {
+    fontFamily: 'Crimson Text',
+    fontSize: 18,
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    textAlign: 'center',
+    marginBottom: 8,
+    fontWeight: '300',
+  },
+  clubName: {
+    fontFamily: 'Cormorant Infant',
+    fontSize: 42,
     fontWeight: 'bold',
     color: '#FFFFFF',
+    letterSpacing: 2,
+    textAlign: 'center',
+    marginBottom: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: {width: 0, height: 2},
+    textShadowRadius: 4,
   },
-  headerSubtitle: {
-    fontSize: 16,
-    color: '#FFFFFF',
-    opacity: 0.9,
+  welcomeBox: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  welcomeText: {
+    fontFamily: 'Crimson Text',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2C5F2D',
+  },
+  roleText: {
+    fontFamily: 'Crimson Text',
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
   },
   content: {
     padding: 16,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontFamily: 'Cormorant Infant',
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 16,
     color: '#212121',
@@ -145,23 +203,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
+    fontFamily: 'Cormorant Infant',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '400',
     marginBottom: 4,
   },
   cardDescription: {
+    fontFamily: 'Crimson Text',
     fontSize: 14,
     color: '#757575',
   },
   infoCard: {
     marginTop: 16,
-    backgroundColor: '#E3F2FD',
+    backgroundColor: '#F0F4E8',
   },
   infoTitle: {
+    fontFamily: 'Cormorant Infant',
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 12,
-    color: '#1976D2',
+    color: '#2C5F2D',
   },
   tipRow: {
     flexDirection: 'row',
@@ -169,6 +230,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   tipText: {
+    fontFamily: 'Crimson Text',
     marginLeft: 8,
     fontSize: 14,
     color: '#424242',

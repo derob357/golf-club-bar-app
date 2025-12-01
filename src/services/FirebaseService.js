@@ -464,11 +464,25 @@ class FirebaseService {
 
   async updateItemPopularity(itemId) {
     try {
-      await firestore().collection('inventory').doc(itemId).update({
-        popularity: firestore.FieldValue.increment(1),
-      });
+      const itemRef = firestore().collection('inventory').doc(itemId);
+      const itemDoc = await itemRef.get();
+      
+      if (itemDoc.exists) {
+        // Update existing inventory item
+        await itemRef.update({
+          popularity: firestore.FieldValue.increment(1),
+        });
+      } else {
+        // Create inventory entry for tracking if it doesn't exist
+        await itemRef.set({
+          itemId: itemId,
+          popularity: 1,
+          lastOrdered: firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+      }
     } catch (error) {
-      console.error('Error updating popularity:', error);
+      // Silently fail - popularity tracking is non-critical
+      console.log('Skipping popularity update:', error.code);
     }
   }
 

@@ -4,32 +4,48 @@ export const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#1B5E20', // Golf course green
-    accent: '#FFB300', // Gold accent
-    background: '#F5F5F5',
+    primary: '#2C5F2D', // DHGC Dark Green
+    accent: '#D4AF37', // DHGC Gold
+    background: '#F8F9F5',
     surface: '#FFFFFF',
-    text: '#212121',
-    error: '#D32F2F',
-    success: '#388E3C',
+    text: '#1A1A1A',
+    error: '#C62828',
+    success: '#2C5F2D',
     warning: '#F57C00',
     info: '#1976D2',
     disabled: '#9E9E9E',
     placeholder: '#757575',
-    backdrop: 'rgba(0, 0, 0, 0.5)',
+    backdrop: 'rgba(44, 95, 45, 0.5)',
   },
-  roundness: 8,
   fonts: {
+    ...DefaultTheme.fonts,
     regular: {
-      fontFamily: 'System',
-      fontWeight: 'normal',
+      fontFamily: 'Crimson Text',
+      fontWeight: '400',
     },
     medium: {
-      fontFamily: 'System',
-      fontWeight: '500',
+      fontFamily: 'Crimson Text',
+      fontWeight: '600',
     },
-    bold: {
-      fontFamily: 'System',
-      fontWeight: 'bold',
+    light: {
+      fontFamily: 'Crimson Text',
+      fontWeight: '300',
+    },
+    thin: {
+      fontFamily: 'Crimson Text',
+      fontWeight: '200',
     },
   },
+  roundness: 12,
+};
+
+// Custom fonts for headings (Cormorant Infant)
+export const headingFont = {
+  fontFamily: 'Cormorant Infant',
+  fontWeight: 'bold',
+};
+
+export const headingFontRegular = {
+  fontFamily: 'Cormorant Infant',
+  fontWeight: '400',
 };

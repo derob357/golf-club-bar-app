@@ -178,7 +178,7 @@ export const SPIRITS = [
 // Drink categories for filtering
 export const DRINK_CATEGORIES = [
   {id: 'all', name: 'All Drinks', icon: 'glass-cocktail'},
-  {id: 'cocktail', name: 'Cocktails', icon: 'glass-martini'},
+  {id: 'cocktail', name: 'Cocktails', icon: 'glass-martini-variant'},
   {id: 'beer', name: 'Beer', icon: 'beer'},
   {id: 'wine', name: 'Wine', icon: 'glass-wine'},
   {id: 'spirits', name: 'Spirits', icon: 'bottle-tonic-plus'},
