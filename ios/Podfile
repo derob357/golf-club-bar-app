@@ -17,7 +17,7 @@ prepare_react_native_project!
 #   dependencies: {
 #     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
 # ```
-flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
+flipper_config = FlipperConfiguration.disabled
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
@@ -59,6 +59,76 @@ target 'DHGC' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    
+    # Fix for gRPC and BoringSSL compilation errors with Xcode 16+
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # Fix for gRPC C++ template errors
+        if target.name.start_with?('gRPC')
+          config.build_settings['WARNING_CFLAGS'] ||= ['$(inherited)']
+          config.build_settings['WARNING_CFLAGS'] << '-Wno-missing-template-arg-list-after-template-kw'
+        end
+        
+        # Fix for BoringSSL invalid -G flag - comprehensive fix
+        if target.name == 'BoringSSL-GRPC'
+          # Set GCC_WARN_INHIBIT_ALL_WARNINGS as a proper build setting
+          config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = 'YES'
+          
+          # Ensure -w is in OTHER_CFLAGS to suppress warnings
+          config.build_settings['OTHER_CFLAGS'] ||= ['$(inherited)']
+          config.build_settings['OTHER_CFLAGS'] = [config.build_settings['OTHER_CFLAGS']].flatten
+          unless config.build_settings['OTHER_CFLAGS'].include?('-w')
+            config.build_settings['OTHER_CFLAGS'] << '-w'
+          end
+          
+          # Remove the malformed flag from all compiler flags
+          ['OTHER_CFLAGS', 'OTHER_CPLUSPLUSFLAGS', 'OTHER_CXXFLAGS'].each do |setting|
+            if config.build_settings[setting]
+              flags = [config.build_settings[setting]].flatten
+              flags = flags.map { |f| f.to_s.gsub(/\s*-GCC_WARN_INHIBIT_ALL_WARNINGS\s*/, ' ').strip }
+              flags = flags.reject { |f| f.empty? || f.include?('GCC_WARN') }
+              config.build_settings[setting] = flags
+            end
+          end
+        end
+      end
+      
+      # Additional fix: Remove GCC_WARN from compiler flags at the file level
+      if target.name == 'BoringSSL-GRPC'
+        target.source_build_phase.files.each do |file|
+          if file.settings && file.settings['COMPILER_FLAGS']
+            file.settings['COMPILER_FLAGS'] = file.settings['COMPILER_FLAGS']
+              .gsub(/\s*-GCC_WARN_INHIBIT_ALL_WARNINGS\s*/, ' ')
+              .gsub(/\s*GCC_WARN_INHIBIT_ALL_WARNINGS\s*/, ' ')
+              .strip
+            file.settings.delete('COMPILER_FLAGS') if file.settings['COMPILER_FLAGS'].empty?
+          end
+        end
+      end
+    end
+    
+    # Save the modified project
+    installer.pods_project.save
+    
+    # Nuclear option: Modify the project.pbxproj file directly to remove the malformed flag
+    pbxproj_path = File.join(installer.sandbox.root, 'Pods.xcodeproj/project.pbxproj')
+    if File.exist?(pbxproj_path)
+      pbxproj_content = File.read(pbxproj_path)
+      modified = pbxproj_content.gsub(/-GCC_WARN_INHIBIT_ALL_WARNINGS/, '')
+                                .gsub(/GCC_WARN_INHIBIT_ALL_WARNINGS/, '')
+      File.write(pbxproj_path, modified) if modified != pbxproj_content
+    end
+    
+    # Fix for gRPC-Core modulemap not found error
+    # Copy the modulemap file from the actual location to the expected location
+    grpc_headers_path = File.join(installer.sandbox.root, 'Headers/Private/grpc')
+    grpc_modulemap_source = File.join(installer.sandbox.root, 'Target Support Files/gRPC-Core/gRPC-Core.modulemap')
+    grpc_modulemap_dest = File.join(grpc_headers_path, 'gRPC-Core.modulemap')
+    
+    if File.exist?(grpc_modulemap_source)
+      FileUtils.mkdir_p(grpc_headers_path) unless Dir.exist?(grpc_headers_path)
+      FileUtils.cp(grpc_modulemap_source, grpc_modulemap_dest)
+      puts "[Custom] Copied gRPC-Core.modulemap to fix module map not found error"
+    end
   end
 end

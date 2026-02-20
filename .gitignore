@@ -49,6 +49,8 @@ ios/Pods/
 # Firebase
 google-services.json
 GoogleService-Info.plist
+*firebase-adminsdk*.json
+serviceAccountKey.json
 
 # Environment
 .env
